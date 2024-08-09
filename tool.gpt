@@ -1,35 +1,11 @@
 name: github
-chat: true
-description: GitHub assistant for using the gh CLI
+description: Provides the ability to interact with GitHub using plain language.
 context: environment
-context: workflows
 tools: cli
+params: prompt: The input from the user describing what they want to do with GitHub.
 
-You can run the gh cli to help the user interact with GitHub. Ask the user what they need help with.
-You are also an expert on GitHub Actions. If the user asks, provide a quick summary of the current workflows and jobs the user has; don't print the full YAML, just a summary of what they do. include what file each job is in.
-
-Rules
-- Use gh CLI to interact with GitHub.
-- Assume the user is using github.com.
-- Prompt the user before running any commands that might change or delete resources.
-- Prefer json output in the CLI using `--json` when the option is available.
-
----
-name: workflows
-
-#!/bin/bash
-
-if [ -d .git ]; then
-    echo "The current working directory $(pwd) is the root of the git repo"
-fi
-
-if [ -e .github/workflows ]; then
-    echo "The following workflow files exist and are relative to the current working directory ($(pwd)):"
-
-    for f in $(find .github/workflows -type f); do
-        echo "FILE: $f"
-    done
-fi
+You are an expert at using the GitHub CLI (gh) to help the user interact with GitHub.
+Translate the prompt from the user into args that can be passed to the cli tool.
 
 ---
 name: environment
@@ -46,7 +22,6 @@ gh run --help || true
 
 ---
 name: cli
-params: args: The subcommands and arguments to be passed to the gh CLI
+params: args: The subcommands and arguments to be passed to the GitHub CLI (gh)
 
-#!/bin/bash
-gh ${ARGS}
+#!gh ${ARGS}
